@@ -7,7 +7,6 @@
  * @License GNU/GPL version 2 or any later version
  * @Createdate 19-09-2010 23:30
  */
-
 if (!defined('NV_IS_MOD_DOWNLOAD')) {
     die('Stop!!!');
 }
@@ -71,7 +70,7 @@ if ($_SERVER['REQUEST_URI'] == $base_url_rewrite) {
 
 $row['cattitle'] = '<a href="' . NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $list_cats[$row['catid']]['alias'] . '">' . $list_cats[$row['catid']]['title'] . '</a>';
 
-$row['uploadtime'] = (int)$row['uploadtime'];
+$row['uploadtime'] = (int) $row['uploadtime'];
 if ($row['uploadtime'] >= $today) {
     $row['uploadtime'] = $lang_module['today'] . ', ' . date('H:i', $row['uploadtime']);
 } elseif ($row['uploadtime'] >= $yesterday) {
@@ -80,7 +79,7 @@ if ($row['uploadtime'] >= $today) {
     $row['uploadtime'] = nv_date('d/m/Y H:i', $row['uploadtime']);
 }
 
-$row['updatetime'] = (int)$row['updatetime'];
+$row['updatetime'] = (int) $row['updatetime'];
 if ($row['updatetime'] >= $today) {
     $row['updatetime'] = $lang_module['today'] . ', ' . date('H:i', $row['updatetime']);
 } elseif ($row['updatetime'] >= $yesterday) {
@@ -174,8 +173,14 @@ if ($row['is_download_allow']) {
                     $file2 = NV_UPLOADS_DIR . $file['file_path'];
                     if (file_exists(NV_ROOTDIR . '/' . $file2) and ($filesize = filesize(NV_ROOTDIR . '/' . $file2)) != 0) {
                         $new_name = str_replace('-', '_', $filealias) . ($count_file > 1 ? '_part' . str_pad($a, 2, '0', STR_PAD_LEFT) : '') . '.' . nv_getextension($file2);
-                        $row['fileupload'][] = array('link' => '#', 'title' => $new_name);
-                        $session_files['fileupload'][$new_name] = array('src' => NV_ROOTDIR . '/' . $file2, 'id' => $row['id']);
+                        $row['fileupload'][] = array(
+                            'link' => '#',
+                            'title' => $new_name
+                        );
+                        $session_files['fileupload'][$new_name] = array(
+                            'src' => NV_ROOTDIR . '/' . $file2,
+                            'id' => $row['id']
+                        );
 
                         ++$a;
                         if (empty($row['filepdf']) and preg_match('/\.pdf$/i', $file2)) {
@@ -213,8 +218,12 @@ if ($row['is_download_allow']) {
                         $row['linkdirect'][$host][] = array(
                             'link' => $link,
                             'code' => $code,
-                            'name' => isset($link{70}) ? $scheme . '://' . $host . '...' . substr($link, -(70 - strlen($scheme . '://' . $host))) : $link);
-                        $session_files['linkdirect'][$code] = array('link' => $link, 'id' => $row['id']);
+                            'name' => isset($link{70}) ? $scheme . '://' . $host . '...' . substr($link, -(70 - strlen($scheme . '://' . $host))) : $link
+                        );
+                        $session_files['linkdirect'][$code] = array(
+                            'link' => $link,
+                            'id' => $row['id']
+                        );
                     }
                 }
             }
@@ -238,6 +247,10 @@ $session_files = serialize($session_files);
 $nv_Request->set_Session('session_files', $session_files);
 
 $row['filesize'] = !empty($row['filesize']) ? nv_convertfromBytes($row['filesize']) : $lang_module['unknown'];
+
+if (!empty($row['fileimage']) && file_exists(NV_ROOTDIR . '/' . NV_UPLOADS_DIR . $row['fileimage'])) {
+    $meta_property['og:image'] = NV_MY_DOMAIN . '/' . NV_UPLOADS_DIR . $row['fileimage'];
+}
 
 $img = NV_UPLOADS_DIR . $row['fileimage'];
 $row['fileimage'] = nv_ImageInfo(NV_ROOTDIR . '/' . $img, 300, true, NV_ROOTDIR . '/' . NV_TEMP_DIR);
@@ -287,7 +300,7 @@ $row['rating_point'] = 0;
 if (!empty($row['rating_detail'])) {
     $row['rating_detail'] = explode('|', $row['rating_detail']);
     if ($row['rating_detail'][1]) {
-        $row['rating_point'] = round((int)$row['rating_detail'][0] / (int)$row['rating_detail'][1]);
+        $row['rating_point'] = round((int) $row['rating_detail'][0] / (int) $row['rating_detail'][1]);
     }
 }
 $row['rating_string'] = $lang_module['file_rating' . $row['rating_point']];
