@@ -257,7 +257,7 @@ if (!in_array($row['id'], $dfile)) {
     ++$row['view_hits'];
 }
 
-$array_keyword = [];
+$array_keyword = array();
 $_query = $db->query('SELECT a1.keyword, a2.alias FROM ' . NV_MOD_TABLE . '_tags_id a1
             INNER JOIN ' . NV_MOD_TABLE . '_tags a2
             ON a1.did=a2.did WHERE a1.id=' . $row['id']);
